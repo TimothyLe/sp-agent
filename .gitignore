@@ -10,5 +10,10 @@ ipython_config.py
 
 # Py cache
 __pycache__/
+embedding_cache/
+
+# env
+.env
+.env.*
 # Remove previous ipynb_checkpoints
 #   git rm -r .ipynb_checkpoints/
