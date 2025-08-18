@@ -1,5 +1,7 @@
 # sp-agent
-A simple information delivery agent using a RAG system
+A simple information delivery agent using a RAG system  
+
+Chunking strategy by [Levels of Text Splitting by Greg Kamradt](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb)  
 
 # Prequisites
 
