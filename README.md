@@ -3,13 +3,46 @@ A simple information delivery agent using a RAG system
 
 Chunking strategy by [Levels of Text Splitting by Greg Kamradt](https://github.com/FullStackRetrieval-com/RetrievalTutorials/blob/main/tutorials/LevelsOfTextSplitting/5_Levels_Of_Text_Splitting.ipynb)  
 
-# Prequisites
+## Prequisites
 
 - python3  
 - jupyter notebook  
 - `pip install -r requirements.txt`
 
-# How to Run
+## Key Features 
+
+**🚀 High Performance:**
+- Parallel processing of multiple files
+- Efficient token estimation (4 chars/token rule)
+- Embedding caching to avoid recomputation
+- Batch processing for embeddings
+
+**🧠 Semantic Intelligence:**
+- Respects paragraph and sentence boundaries
+- Adaptive chunking based on content structure
+- Keyword extraction for each chunk
+- Cosine similarity ranking for queries
+
+**🔧 Your Model Integration:**
+- Designed to work with `CompendiumLabs/bge-base-en-v1.5-gguf`
+- Ready for integration with `Llama-3.2-1B-Instruct-GGUF`
+- Proper embedding dimension handling
+
+**⚡ Fast Processing:**
+- Compiled regex patterns for speed
+- ThreadPoolExecutor for parallel file processing
+- In-memory caching with disk persistence
+- Minimal overhead chunking algorithm
+
+## Advanced Features
+
+1. **Adaptive Chunking**: Respects semantic boundaries while maintaining size constraints
+2. **Rich Metadata**: Each chunk includes keywords, token counts, source info, and embeddings  
+3. **Caching System**: Persistent embedding cache for faster subsequent runs
+4. **Statistics**: Built-in analytics for your chunk collection
+5. **Batch Processing**: Optimized for large document collections
+
+## Quick Start 
 
 1. Install required packages  
 2. Add your data to `datasets/` or use default data
