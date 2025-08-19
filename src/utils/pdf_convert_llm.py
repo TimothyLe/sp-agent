@@ -17,7 +17,7 @@ md_text = pymupdf4llm.to_markdown(fn)
 f_md = fout+".md" 
 f_txt = fout+".txt" 
 pathlib.Path(f_md).write_bytes(md_text.encode())
-subprocess.run(f"pandoc {f_md} -o datasets/{f_txt}".split())
+subprocess.run(f"pandoc {f_md} -o {f_txt}".split())
 
 # remove artifact
 try: 
