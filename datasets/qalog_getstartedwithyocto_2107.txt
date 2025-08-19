@@ -1,0 +1,526 @@
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Resources & References:
+
+Yocto Project Yocto Project Git Repository
+[www.yoctoproject.org](http://www.yoctoproject.org/)
+<https://git.yoctoproject.org/cgit/cgit.cgi/>
+
+hello.bb
+
+                      [ftp://ftp.gnu.org/gnu/hello/hello](ftp://ftp.gnu.org/gnu/hello/hello-2.9.tar.gz) 2.9.tar.gz
+
+OpenEmbedded Layers:
+[http://layers.openembedded.org](http://layers.openembedded.org/)
+
+Toradex Git Repository <https://git.toradex.com/meta-toradex-nxp.git>
+
+Toradex BSP Files
+
+                              [https://developer.toradex.com/files/toradex](https://developer.toradex.com/files/toradex-dev/uploads/media/Colibri/Linux/Images/) dev/uploads/media/Colibri/Linux/Images/
+
+Toradex Colibri Arm Family
+<https://www.toradex.com/computer-on-modules/colibri-arm-family>
+
+Doulos Yocto Training Doulos Yocto Training Live Online
+[www.doulos.com/yoctotraining](http://www.doulos.com/yoctotraining)
+[www.doulos.com/yoctotrainingol](http://www.doulos.com/yoctotrainingol)
+
+**Q&A Log for Session 1** **Q&A log for Session 2 »**
+
+Audience Question:
+
+Q: How different is Yocto from Buildroot?
+
+A: Yocto and Buildroot are 2 distro builders. They're aiming to solve
+the "same problem". However, they differ in their approach. From what I
+can see/know, Yocto seems to be more widely used in the industry for
+developing Embedded (Linux) System products.
+
+Audience Question:
+
+Q: What scripting engine is used to implement recipes, is it written in
+Python? A: A recipe is a text file containing functions named do\_XXX.
+The functions can be either written using bash script, or indeed Python.
+
+Audience Question:
+
+Q: Can I use Yocto to build u-boot image? A: Yes, you can. You can even
+use Yocto to build the grub bootloader (if you're on a x86 based
+system).
+
+Audience Question:
+
+Q: Is there any tool to validate recipe before bitbake? A: Good
+question. IIRC, a Yocto developer - Konrad Weihmann - has written a
+linter. Check his repo: <https://github.com/priv-kweihmann>
+
+Page **1** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question: Q: What is the primary task when preparing particular
+Yocto-based firmware, is it primarily writing/modifying recipes or
+something else? A: This question is too generic to be answered
+precisely. I'd say, the primary tasks is to integrate the BSP layer. If
+you're lucky, there's only a little work to do, i.e., settings up the
+correct variables/values in conf/local.conf. If you're unlucky, you
+might end up in creating your own layer with append recipes to patch the
+BSP layer.
+
+Audience Question:
+
+Q: Can I run third party build script which internally have built for
+dependency source, as high level on do\_compile to invoke this build.sh.
+Does this build shell script uses auto tools? A: Yocto supports natively
+various build system already: make, autotools, cmake, scons, QT-based
+build etc. If you had your own custom build system, you'd have to teach
+Yocto/bitbake how to do the do\_fetch, do\_patch, do\_build etc.
+operations. That would then just work!
+
+Audience Question:
+
+Q: In imx6 I want to limit the RAM usage by process, how can I do it? A:
+Looks for ulimit, resp. control group.
+
+Audience Question:
+
+Q: How to build minimal image for totally new target? A: Look at
+poky-tiny distribution in meta-poky. A: Again, take inspiration from
+poky-tiny. Use the BSP layer, set DISTRO="poky-tiny" in your local.conf
+
+Audience Question:
+
+Q: What other bootloaders are possible with Yocto other than u-boot? A:
+Yes. For instance, grub on x86 system.
+
+Audience Question:
+
+Q: Is it possible & effective to build for several board inside the same
+build in order to share the native builds, and the fetch (source
+tarball, etc.)? A: I would recommend one builddir per board and share
+the caches. For the download cache, that works. For sstate cache, it is
+trickier. Yocto also support multiple board build, but I hadn't the time
+to look to it into details. There are some doc available in the Yocto
+Mega manual, look there.
+
+Audience Question:
+
+Q: Yocto separates the layers from the sources completely. During the
+development you typically want to build the current snapshot image from
+your source code master branch. With the Yocto approach you always need
+to update all the recipes. Is there any way to get the development
+snapshot from Yocto build system easily and
+
+automated?
+
+A: Yes, you can use SRCREV = "\${AUTOREV}".
+
+Audience Question: Q: Is there a way to find whether our recipe/a custom
+kernel changes are appended while building? A: For this kind of
+question, bitbake-layers --help is your friend :) You'll see, you can
+query the append recipes using: bitbake-layers show-appends.
+
+Page **2** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question:
+
+Q: Should we do any modifications to the files directly inside the build
+directory, or should all the work be done through layers and recipes? A:
+You can, but you will regret it at some point when the layers get
+updated upstream. The recommended way for this task is to create a new
+layer and use append recipe. Of course, it might be a good idea to
+submit your patches to the upstream project.
+
+Audience Question: Q: How can I force bitbake to use http:// instead of
+git:// to download dependencies behind corporate proxy which blocks
+git:// URLs? A: That's the fetcher. You can use http://, git://, ftp://,
+hg:// ... is the SRC\_URI. I think, Yocto has also some setup
+
+for PROXY IIRC.
+
+Audience Question:
+
+Q: What is recommended host machine to work with Yocto project? Can it
+be done successfully working with
+
+Win10?
+
+A: If you're on WINbox, I'd recommend you use a VM (VirtualBox or
+VMware). There's CROPS, but until recently it uses Virtualbox
+underneath. I hadn't the chance to look at the Linux Subsystem for
+windows yet.
+
+Audience Question:
+
+Q: We have two projects, first uses Colibri VF50 and second will use
+Verdin iMX8M-Plus. Would you recommend maintaining images of them in the
+same Yocto environment or create two separate Yocto repo for them? A: I
+would recommend having two different builddir. The Layers can be shared.
+Also, there are some possibly shared the downloads/ cache for instance.
+
+Audience Question:
+
+Q: How do I create Linux imx6 project? A: You need the corresponding BSP
+layer from the board vendor (freescale, or NXP depending on the 'age').
+
+Audience Question:
+
+Q: How to use RTlinux in imx6?
+
+A: Only if it's supported by the BSP layer, and I don't think it is.
+Linux RT is only available for specific kernel versions, and often board
+vendors use other Linux kernel versions.
+
+Audience Question:
+
+Q: Are there any online Yocto services building everything in the cloud?
+A: One service I know is from the Yocto project itself, where they build
+sstate-cache that you can setup in your SSTATE\_MIRROR to speed up your
+build. There might be other services as well.
+
+Q: How can I do md5sum for git URL? A: If you mean, fetching a
+particular commit ID, use SRCREV.
+
+See:
+https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html\#new-recipe-fetching-code
+
+Audience Question:
+
+Q: How to build minimal image for totally new target? When you source
+the script, will you have a suggestion as bitbake core-minimal-image? A:
+Yes, bitbake core-image-minimal. Also, set DISTRO="poky-tiny"
+
+Page **3** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question:
+
+Q: After constructing our Embedded Linux image, by default systemd or
+sysvinit init manager will be present? A: Per default, it's sysvinit.
+It's easy to switch to systemd. Check this section of the mega-manual:
+
+                                 -                                 -                                 -                                 https://www.yoctoproject.org/docs/latest/mega [manual/mega](https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#using-systemd-exclusively) manual.html#using systemd exclusively
+
+Audience Question:
+
+Q: Why is the default to have 2 partitions within the wic file (FAT and
+EXT)? A: You can have whatever you want. This is controlled in the wic
+kickstart file.
+
+Audience Question:
+
+Q: Can we use another media for the update, like network? A: For the
+board presented in this webinar, check with our partner Toradex.
+Generally speaking, from a Linux embedded point of view, you can use NFS
+for the rootfs, and TFTP boot for the kernel (setup at uboot level).
+
+Audience Question: Q: Is there a possibility for reverse engineering of
+firmware to obtain original configs/recipes, etc.? A: I don't see how
+that could be possible!
+
+Audience Question:
+
+Q: Is it possible to define multiple recipes for the same package with
+different versions? Will bitbake pick the latest version automatically?
+A: Yes, you can have different recipes with different version. There are
+mechanisms to tell bitbake which one to pick up. This is commonly used
+for instance in the BSP layer, as we often have different kernel version
+supported.
+
+Audience Question:
+
+Q: How can I use sources on my local system to be used for bitbake? A:
+If you mean to use a file on your local disk, yes. Use file:// as
+fetcher.
+
+Audience Question:
+
+Q: How can we add library or cross compile particular library? A: The
+generic approach is:
+
+-   first cross compile your library with your toolchain (i.e.,
+    outside's Yocto)
+
+-   figure out build time dependencies =\> will be managed at recipe
+    level by DEPENDS="xxx"
+
+-   figure out runtime dependencies =\> managed at recipe level by
+    RDEPENDS="xxx" Of course, if you have dependencies on other
+    libraries, you might need to create a recipe for them as well.
+
+Audience Question:
+
+Q: Do you have a plan to upgrade Yocto from Dunfell to Hardknott? When?
+A: Is this question related to the board / Toradex environment
+presented. If so, please query our partner Toradex directly. Generally
+speaking: Dunfell is a Long-term Support version for Yocto.
+
+Audience Question:
+
+Q: Where are the filesystem partitions defined? For example, if I want
+to reserve space for a duplicate of the root file system for update
+purposes. A: That's usually defined in the BSP layer. Have a look for
+instance at: meta-yocto-bsp/conf/machine/beagleboneyocto.conf.
+
+Page **4** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question:
+
+Q: Is there an example of running Yocto as dockerized toolchain, so
+there is no need to install and configure build environment tool by tool
+manually? A: Yes, I am sure there are some. It's the right, these days,
+especially if your product is subject to some normative requirements
+like ISO 26262, 62304 etc.
+
+Audience Question:
+
+Q: How to control the licenses of all involved components, when firmware
+is ready to go production? A: Licenses will be found in your builddir in
+tmp/deploy/licenses. During the build, there are possibility to control
+which licenses are allowed / not permitted. Finally, you can tell in
+local.conf that you want to install the lic file in the root filesystem.
+
+Audience Question:
+
+Q: How to stop do\_compile of any particular recipe? I don't want to
+build that recipe because it has some
+
+issues.
+
+A: Good question. BBMASK is your friend for this kind of issue (check in
+the mega-manual).
+
+Audience Question:
+
+Q: From a Hardware view, do we have any minimum requirements to start
+Yocto project? A: Any modern laptop will do this day. I'm sure you'll
+find some specs in the mega manual. I'd say 4 cores, 8Gb and a lot of
+disk space (500 Gb or more this day isn't a problem).
+
+Audience Question:
+
+Q: How do I know the BSP version of custom image? A: I don't know what
+you mean by "BSP version". You can recognize a BSP layer, because it has
+a conf/machine directory.
+
+Audience Question:
+
+Q: I create an SDK, that (once installed) seems to contain the rootfs
+too. But it seems I can't export that to use it via NFS. Am I doing
+something wrong? Do I have to extract the rootfs by separate command? A:
+That should work. I don't have an example to check it. Is the rootfs
+expanded, or as .ext4 for instance? In the former case, that would be
+rather a NFS setup issue.
+
+Audience Question:
+
+Q: What steps would need to be taken to configure a touch screen and
+display for a custom board? Resolution, frame rates, and how might
+drivers be added if needed? A: That's really board dependent. From a
+generic point of view, you'll have to build and add the driver (BSP
+layer) and add any relevant packages to setup/drive the touch
+screen/display at application level.
+
+Audience Question:
+
+Q: What does bitbake -c devshell do? A: bitbake -c devshell starts a so
+called "developer shell" and place you in \${S}. It's used to do a quick
+fix at the source, e.g., to create patch and append recipes. devshell is
+ancient, the modern version read "devtool".
+
+Page **5** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question:
+
+Q: I was trying to include siliconLabs zwportal build shell script
+(which internally takes all dependency by itself and fetch/compile
+everything inside build script itself), but facing issue that the source
+library/tools are not taking proper path on Yocto build, any instruction
+to follow? Or, do we need to convert the shell script to separate to map
+to recipe to do all fetch/compile as per Yocto? A: There is no need to,
+normally. But you need to instruct Yocto about the PATH etc. I can't
+answer this question specifically, that's something to do on a
+case-by-case basis.
+
+Audience Question:
+
+Q: Can we use a browser like Chrome in imx6, which can be rendered to
+screen using HDMI? A: I think, you should be able to compile Chronium,
+yes. I have some vague remembering about customers doing that
+(automotive industry) some years ago.
+
+Audience Question:
+
+Q: Can I add apt install in Yocto image? A: Yes. You can choose .deb for
+package management.
+
+Audience Question:
+
+Q: Is there an easy way to manage Debug and Release images with the
+Yocto? A: It's easy to create variant for package with a given recipes:
+production, for development (e.g., with debug symbols) etc.
+
+**Session 2 Q&A log on next page**
+
+Page **6** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+**Session 2 Q&A log**
+
+Audience Question:
+
+Q: Does bitbake out-of-the-box-support Cmake and other build systems, or
+just standard Makefiles? A: It's supported by the Yocto system using a
+.bbclass. Yocto supports out of the box: Makefile,autotools,Cmake,scons,
+Qt-based project among other. You need to use inherit, e.g., inherit
+Cmake to build a Cmake based project.
+
+Audience Question:
+
+Q: What other bootloaders are possible with Yocto other than u-boot? A:
+Yes. Yocto supports other boot loaders, e.g., grub for x86 based
+platforms.
+
+Audience Question:
+
+Q: What is a layer exacty? A: At discussed on the slide, a layer on a
+disk is simply a directory with some configuration files. From a system
+point of view, a layer usually represents a high-level functionality of
+our system. For example, the BSP layer will have everything needed to
+run Linux kernel on a particular board. A layer can be viewed as a Lego
+building block. You integrate the layer you want to create your product.
+
+Audience Question:
+
+Q: Can Yocto be used to build the same software for different boards?
+
+A: Yes absolutely. I recommend using one build directory per board (the
+directory is specified when you source oeinit-build-env). There are
+other possibilities, but they are trickier to put in place.
+
+Audience Question:
+
+Q: Do you have Yocto project example for Xilinx ZYNQ family FPGA boards?
+A: Interesting question :) The peta-Linux from Xilinx uses Yocto
+underneath. Also, we're using Yocto to generate the artefacts needed for
+our embedded Linux training using the MicroZed (among other). So, I
+guess, the answer is yes :) Is your question related to the FPGA part
+itself?
+
+Audience Question:
+
+Q: Is angstrom still an active project? I had heard it had ceased. A:
+Hmm, I don't know. I Just had a look to the official github, there are
+still some activities apparently. From a Yocto point of view, angstrom
+is simply supported with the corresponding meta-angstrom (distro) layer.
+Another Lego building block ;)
+
+Audience Question:
+
+Q: What is a .bbappend? A: "bbappend" file is a mechanism to modify an
+existing recipe without changing the recipe inside the upstream layer.
+This mitigates the issue of updating upstream layers.
+
+Audience Question:
+
+Q: Is it possible to build a micro distro that lives inside Intel sgx or
+AMD sev or Arm Trustzone? Are there projects that do such things out
+there? A: If Yocto can build such a micro distro? Yes, absolutely. Are
+the required meta-layer Lego building block available (or example of
+them) somewhere? I don't know, that's something I'd search on the
+internet.
+
+Page **7** of **8**
+
+**Getting Started with Yocto**
+==============================
+
+**Webinar Q&A Logs -- Both Sessions -- July 2021**
+--------------------------------------------------
+
+Audience Question:
+
+Q: Is bitbake a package manager? A: No, bitbake is a build engine (like
+make for Makefile). The package manager something you can configure
+within your Yocto config file: what kind of package you want (rpm, deb
+or ipk) and if you want the well-known package manager on the target
+(like dnf, apt etc.).
+
+Audience Question:
+
+Q: Will the speaker cover adding gdbserver to an image? A: No. But I can
+tell how to do it. Either add "tools-debug" to EXTRA\_IMAGE\_FEATURES.
+Or add "gdbserver" to CORE\_IMAGE\_EXTRA\_INSTALL
+
+Audience Question:
+
+Q: All I have to say is that the speaker gets extra points for the
+XGalaga graphic. ;-) Excellent presentation. A: xgalaga is an important
+app for our embedded Linux and Yocto training. The training is highly
+recommended! :)
+
+Audience Question:
+
+Q: gdbserver is not listed as a recipe in layers.openebmedded.org! A:
+There is indeed no "gdbserver" recipe in openembedded. It's coming
+actually from another recipe: gdb (found in
+poky/meta/recipes-devtools/gdb). This creates the gdbserver package.
+
+Audience Question:
+
+Q: Is this presentation applicable to the i.MX8M Plus board as well? A:
+If it's provided by Toradex, yes, I think so. If not, then most of the
+part will apply. You need the BSP meta-layer for your board.
+
+Audience Question:
+
+Q: Do you expect that after this training that an engineer should be
+able to get a copy of FreeRTOS and build it using bitback using what is
+downloaded from the FreeRTOS site? I realize this is not a FreeRTOS
+webinar but I expect that most OSS can be built using bitbake. A: What
+training are you mentioning? The Doulos Yocto training, or the Know-how
+workshop? Q: Doulos Yocto training that I just completed. A: The
+training is focussed on Linux. However, you get a good starting point
+from my experience. I had myself no Yocto knowledge prior to joining
+Doulos. The training helped me to find my way and I could now tackle
+this kind of task. But still, there's some work to do, practicing, and
+looking how recipes - how the Yocto people solve a particular problem.
+
+Page **8** of **8**

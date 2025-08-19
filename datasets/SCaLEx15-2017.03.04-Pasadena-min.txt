@@ -1,0 +1,581 @@
+Yocto Project Dev Day Wifi information
+
+If you want to connect to the Internet: SSID:
+
+The URL for this presentation
+
+### http://bit.ly/2mpHMLu
+
+**Yocto Project Overview**
+==========================
+
+**What is the Yocto Project?**
+==============================
+
+➢ Collaborative Project under Linux Foundation
+
+Backed by many companies interested in making
+
+Embedded Linux easier for industry
+
+Split governance model
+
+Technical Leadership Team
+
+Advisory Board made up of participating
+
+organizations ➢ Co-maintains OpenEmbedded Core and other tools
+
+(including opkg)
+
+5
+
+#### **Yocto Project Release Versions**
+
+~~6~~
+
+  Name      Revision   Poky   Release Date
+  --------- ---------- ------ ----------------
+  Bernard   1.0        5.0    Apr 5, 2011
+  Edison    1.1        6.0    Oct 17, 2011
+  Denzil    1.2        7.0    Apr 30, 2012
+  Danny     1.3        8.0    Oct 24, 2012
+  Dylan     1.4        9.0    Apr 26, 2013
+  Dora      1.5        10.0   Oct 19, 2013
+  Daisy     1.6        11.0   Apr 24, 2014
+  Dizzy     1.7        12.0   Oct 31, 2014
+  Fido      1.8        13.0   April 22, 2015
+  Jethro    2.0        14.0   Oct 31, 2015
+  Krogoth   2.1        15.0   April 29, 2016
+  Morty     2.2        16.0   Oct 28, 2016
+  Pyro      2.3        17.0   April, 2017
+
+**Intro to OpenEmbedded**
+=========================
+
+###### ➢ The OpenEmbedded Project co-maintains **OE-core build system:**
+
+bitbake build tool and scripts
+
+Metadata and configuration ➢ **Provides a central point for new
+metadata**
+
+(see the OE Layer index)
+
+7
+
+**OK, so what is Poky?**
+========================
+
+**with the Yocto Project** 8
+
+**Poky in Detail**
+==================
+
+**Yocto is based on OpenEmbedded-core**
+
+**Yocto is based on OpenEmbedded-core**
+
+**The Layer Index lists all** **known layers and allows** **you to
+search for:**
+
+**●** **Specific recipes**
+
+**●** **Machine BSP**
+
+**●** **Distros**
+
+**Ties into other tools like**
+
+**Toaster and the upcoming** **setup tool**
+
+**BUILDING A FULL EMBEDDED** **IMAGE WITH YOCTO**
+-------------------------------------------------
+
+**This section will introduce the concept of building an initial**
+**system image, which we will be using later...**
+
+12
+
+#### **Cheating a Little**
+
+➢ **Create a yocto directory**
+
+**\$ mkdir $HOME/yocto/** **$ cd \$HOME/yocto/**
+
+➢ **Unpack the 2 tarballs which will speed up the build**
+
+**\$ tar xvf downloads.tar** **\$ tar xvf sstate-cache.tar**
+
+➢ **This download mirror and SSTATE-CACHE have been**
+
+**prepared a head of class to make this faster...**
+
+13
+
+**Getting a copy of Poky**
+==========================
+
+#### **Setting up a Build Directory**
+
+➢ **Start by setting up a build directory**
+
+**\$ cd $HOME/yocto/** **$ source ./poky/oe-init-build-env** ***build***
+
+➢ **You need to re-run this script in any new terminal you**
+
+**start (and don't forget the project directory)**
+
+15
+
+**Host System Layout**
+======================
+
+16
+
+**Build directory Layout**
+==========================
+
+**Using Layers**
+================
+
+➢ **Layers are added to your build by inserting them into**
+
+**the BBLAYERS variable within your bblayers file**
+
+**\$HOME/yocto/build/conf/bblayers.conf**
+
+**BBLAYERS ?= \"** \*\*\*\*
+\*\*${HOME}/yocto/poky/meta \** **${HOME}/yocto/poky/meta-poky \*\*
+\*\*\${HOME}/yocto/poky/meta-yocto-bsp \*\*
+
+**\"**
+
+18
+
+#### **Update Build Configuration**
+
+➢ Configure build by editing local.conf
+
+**\$HOME/yocto/build/conf/local.conf**
+
+-   Add the following to the bottom of local.conf
+
+**MACHINE = "beaglebone"** **DL\_DIR =
+"${TOPDIR}/../downloads"** **SSTATE_DIR = "${TOPDIR}/../sstate-cache"**
+
+➢ Notice how you can use variables in setting these values
+
+19
+
+#### **Building an Embedded Image**
+
+➢ **This builds an entire embedded Linux distribution**
+
+➢ **The following builds a minimal embedded target**
+
+**\$ bitbake -k core-image-minimal**
+
+➢ **On a fast computer the first build may take the better**
+
+**part of an hour on a slow machine multiple ...** ➢ **The next time you
+build it (with no changes) it may**
+
+**take as little as 5 mins (due to the shared state cache)**
+
+20
+
+#### **SD-card installation**
+
+**BEAGLEBONE SETUP**
+--------------------
+
+**This section will show you how to setup your board**
+
+22
+
+#### **Cable installation**
+
+#### **Boot from external uSD**
+
+#### **Connect to serial port**
+
+**Board Support packages**
+--------------------------
+
+**This section will introduce the concept of board support**
+**packages**
+
+27
+
+#### **Board Support Packages** ➢ Documentation ➢ Hardware Features ➢ Configuration Data ➢ Source Patches ➢ Binary files
+
+➢ http://www.yoctoproject.org/docs/current/bsp-guide/bsp-guide.html
+
+28
+
+#### **Board Support Packages (2)** ➢ Built as a meta layer ◆ meta-`<BSP>`{=html} ➢ Alternately several BSPs can be in a **container layer** ◆ For instance meta-intel
+
+29
+
+#### **Board Support Packages (3)** ➢ BSPs can be found in the layer index ➢ BSP can have dependencies ➢ Typically employ bbappend files ➢ The configuration for a BSP is in **meta-mybsp/conf/machine/mybsp.conf** ➢ Set MACHINE=mybsp in local.conf
+
+30
+
+#### **Board Support Packages (4)** ➢ Yocto project has the yocto-bsp script **for templating new BSPs** **\$ yocto-bsp list karch** **\$ yocto-bsp create boardfoo arm**
+
+31
+
+#### **The yocto-kernel tool** ➢ yocto-kernel `<command>`{=html} \[args\] ◆ config {add,rm,list} ◆ patch {add,rm,list} ◆ feature {add, rm, list} ◆ features list ◆ feature {describe, create, destroy}
+
+32
+
+**Yocto Kernels**
+-----------------
+
+**This section will introduce the concept of kernel recipes**
+
+33
+
+#### **Booting Your Image with QEMU**
+
+  Yocto Project Release   Kernel
+  ----------------------- -----------------
+  2.0                     linux-yocto-4.1
+  2.1                     linux-yocto-4.4
+  2.2                     linux-yocto-4.8
+
+34
+
+#### **Config fragments**
+
+➢ SRC\_URI += smp.cfg
+
+\$ cat smp.cfg CONFIG\_SMP=y
+
+36
+
+#### **Default configuration**
+
+➢ The default kernel config is called "defconfig"
+
+SRC\_URI += defconfig
+
+➢ Search path for relative files in SRC\_URI
+
+FILESPATH = \"${FILE_DIRNAME}/${PF}:\
+
+${FILE_DIRNAME}/${P}:\
+${FILE_DIRNAME}/${PN}:\
+${FILE_DIRNAME}/files:${FILE\_DIRNAME}\"
+
+37
+
+#### **Config fragments**
+
+➢ **SRC\_URI += "file://smp.cfg"**
+
+**\$ cat smp.cfg** **CONFIG\_SMP=y**
+
+38
+
+#### **menuconfig**
+
+➢ **Used to temporarily change configurations with**
+
+**devshell and "make menuconfig"** ➢ **You can now do it with:**
+
+**"bitbake -c menuconfig linux-yocto"** ➢ **You must manually copy back
+the resulting**
+
+**.config**
+
+39
+
+#### **Kernel excercise with menuconfig**
+
+➢ **Change CONFIG\_LOCALVERSION to "-SCaLE15x"**
+
+**\$ cd $HOME/yocto** **$ source poky/oe-init-build-env build** **\$
+bitbake -c menuconfig linux-yocto** **\$ bitbake -C compile
+linux-yocto** **\$ bitbake core-image-minimal** ➢ **Test by reburning
+your uSD card and trying it in**
+
+**your BeagleBone with "uname -r"**
+
+40
+
+#### **Kernel excercise config fragments**
+
+➢ **Change CONFIG\_LOCALVERSION to "-SCaLE15x"**
+
+➢ **\$ cd \$HOME/yocto**
+
+➢ **\$ yocto-layer create mylayer**
+
+**Please enter the layer priority you'd like to use for the layer:
+\[default: 6\]** **Would you like to have an example recipe created?
+(y/n) \[default: n\]** **Would you like to have an example bbappend file
+created? (y/n) \[default: n\]**
+
+**New layer created in meta-mylayer.**
+
+**Don't forget to add it to your BBLAYERS (for details see
+meta-mylayer/README).**
+
+41
+
+##### **Kernel excercise config fragments (2)**
+
+**Add layer to \${TOPDIR}/conf/bblayers.conf**
+
+\*\*/home/`<USER>`{=html}/yocto/meta-mylayer \*\*
+
+\*\*yocto\$ mkdir -p \*\* **meta-mylayer/recipes-kernel/linux**
+
+42
+
+##### **Kernel excercise config fragments (2)**
+
+**\$ cd meta-mylayer/recipes-kernel/linux** \*\*\$ echo
+'CONFIG\_LOCALVERSION="-SCaLE15x"' \*\*
+
+**\> localversion.cfg**
+
+**Create "linux-yocto\_4.8.bbappend" containing:**
+
+**FILESEXTRAPATHS\_prepend := "\${THISDIR}:"** **SRC\_URI +=
+"file://localversion.cfg"**
+
+43
+
+#### **Kernel excercise with menuconfig**
+
+**\$ bitbake -c clean linux-yocto** **\$ bitbake core-image-minimal**
+
+➢ **Test by reburning your uSD card and trying it in**
+
+**your BeagleBone**
+
+**\# uname -r**
+
+**4.8.12-SCaLE15x**
+
+44
+
+**wic**
+-------
+
+**This section will introduce the concept of kernel recipes**
+
+45
+
+#### **What is wic?**
+
+➢ wic uses *kickstart* files to describe the
+
+partition layout and the filesystems used
+
+➢ Much simpler than defining your own
+
+IMAGE\_FSTYPES ➢ This is an example *.wks* file:
+
+46
+
+#### **And Example .wks file**
+
+short-description: Create SD card image with a boot partition
+=============================================================
+
+long-description: Creates a partitioned SD card image. Boot files
+=================================================================
+
+are located in the first vfat partition.
+========================================
+
+part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat\
+
+--label boot --active --align 4 --size 16 part / --source rootfs
+--ondisk mmcblk --fstype=ext4 --label root --align 4
+
+47
+
+#### **Running wic**
+
+\$ wic create -o OUTPUTFILE\
+
+-e core-image-minimal sdimage-bootpart
+
+➢ Wic can also be run in "raw mode" outside of
+
+OpenEmbedded
+
+48
+
+**devtool**
+-----------
+
+**This section will introduce devtool**
+
+49
+
+#### **devtool**
+
+➢ **Devtool automates your work flow**
+
+**$** **devtool add** **https://github.com/msgpack/msgpack-c.git;tag=cpp-2.1.1** **$
+devtool edit-recipe msgpack-c** **\$ devtool build msgpack-c** **\$
+devtool build-image -p msgpack-c core-image-minimal** ***\$ devtool
+deploy-target msgpack-c beaglebone*** ***\$ devtool undeploy-target
+msgpack-c beaglebone*** **\$ devtool finish msgpack-c meta-mylayer**
+
+**You can learn more from the yocto documentation:** **4.3.1.1. Use
+devtool add to Add an Application**
+
+50
+
+#### **Alternate devtool workflow**
+
+51
+
+**eSDK**
+--------
+
+**This section will introduce the extensible Software**
+
+**Development Kit**
+
+52
+
+#### **Building the eSDK**
+
+➢ **You can build the eSDK like this:**
+
+\$ bitbake -c populate\_sdk\_ext core-image-minimal
+
+➢ **You can build the old SDK like this:**
+
+\$ bitbake -c populate\_sdk core-image-minimal
+
+53
+
+#### **Building the eSDK**
+
+➢ **You can build the eSDK like this:**
+
+\$ bitbake -c populate\_sdk\_ext core-image-minimal
+
+➢ **You can build the old SDK like this:**
+
+\$ bitbake -c populate\_sdk core-image-minimal
+
+54
+
+#### **Installing the eSDK**
+
+\$ cd tmp/deploy/sdk \$ source ./poky-glibc-x86\_64-core-image-minimal-\
+
+cortexa8hf-neon-toolchain-ext-2.2.1.sh
+
+➢ **Which installs the eSDK in \$HOME/poky\_sdk/**
+
+55
+
+**Licensing and SPDX**
+----------------------
+
+**This section will show off the Licensing mechanism in**
+**OpenEmbedded**
+
+56
+
+#### **Simple licensing**
+
+LICENSE = "licname1 licname2"
+
+LIC\_FILES\_CHECKSUM = \"file://COPYING;md5=xxxx\
+
+file://licfile.txt;beginline=5;endline=29;md5=yyyy\
+
+file://src/module.h;endline=45;md5=zzzz\
+
+file://../license.html;md5=aaaa\
+
+...\"
+
+-   tmp/deploy/images/beaglebone/\
+
+core-image-minimal-beaglebone.manifest
+
+57
+
+#### **Simple licensing**
+
+LICENSE\_FLAGS = "commercial" LICENSE\_FLAGS = \"license\_${PN}_${PV}
+
+LICENSE\_FILE\_WHITELIST = "commercial\_gst-plugins-ugly"
+LICENSE\_FILE\_WHITELIST = "commercial"
+
+58
+
+#### **SPDX**
+
+-   Can auto detect the license
+
+Defines a comprehensive XML format for encoding licenses in a machine
+readable way
+
+The ability to verify that licensing is compatible
+
+Interim step of simple common headers in all files.
+
+https://spdx.org/
+
+59
+
+**TIPS HINTS AND OTHER RESOURCES**
+----------------------------------
+
+**The following slides contain reference material that will** **help you
+climb the Yocto Project learning curve**
+
+62
+
+**Common Gotchas When Getting Started**
+
+63
+
+**Project Resources**
+=====================
+
+64
+
+**Tip: ack-grep**
+=================
+
+➢ **Much faster than grep for the relevant use**
+
+**cases**
+
+➢ **Designed for code search** ➢ **Searches only relevant files**
+
+Knows about many types: C, asm, perl
+
+By default, skips .git, .svn, etc.
+
+Can be taught arbitrary types ➢ **Perfect for searching metadata**
+
+65
+
+Tip: ack-grep
+=============
+
+**TIP: VIM Syntax Highlighting**
+================================
+
+**└── bitbake.vim**
+
+67
+
+TIP: VIM Syntax Highlighting
+============================
