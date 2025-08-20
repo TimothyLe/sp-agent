@@ -45,10 +45,10 @@ Chunking strategy by [Levels of Text Splitting by Greg Kamradt](https://github.c
 ## Quick Start 
 
 1. Install required packages  
-2. Add your data to `datasets/` or use default data
+2. Add your data to `./datasets` or use default data
 ```
-cp <YOUR_PDF> .
-python3 src/utils/pdf_convert_llm.py <YOUR_PDF> <DESIRED_NAME>
+cp <YOUR_PDF> ./datasets 
+./process_training.sh
 ```  
 3. Configure your RAG
 ```python
@@ -65,11 +65,6 @@ def start_rag_chunker():
         max_workers=2,
         cache_embeddings=True
     )
-...
-    chunks = chunker.process_files_parallel([
-            "datasets/docker.txt", 
-            "datasets/k8.txt", 
-            "datasets/terraform.txt"
-        ]) # add your custom files here
 # when finished press CTRL+ENTER and follow prompt
 ```
+4. Ask questions and receive answers or unanswered context. Enter quit or exit to end the conversation  
